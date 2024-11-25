@@ -24,22 +24,24 @@ GlobExPay is a modern payment system built with Next.js, Supabase, and Telegram 
 ## 🏗️ Project Structure
 
 ```
-globexpay/
-├── src/
-│   ├── app/           # Next.js app directory
-│   ├── components/    # Reusable UI components
-│   ├── hooks/         # Custom React hooks
-│   └── lib/          # Utility functions and configurations
-├── public/           # Static assets
-└── supabase/        # Database migrations and configurations
+.
+├── globexpay/           # Main Next.js application
+│   ├── src/            # Source code
+│   │   ├── app/        # Next.js app directory
+│   │   ├── components/ # Reusable components
+│   │   ├── hooks/      # Custom React hooks
+│   │   └── lib/        # Utilities and configurations
+│   ├── public/         # Static assets
+│   └── supabase/       # Database migrations
+└── README.md           # This file
 ```
 
 ## 🚀 Getting Started
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/globexpay.git
-   cd globexpay
+   git clone https://github.com/urmatdigital/globexpay-app.git
+   cd globexpay-app/globexpay
    ```
 
 2. Install dependencies:
@@ -63,7 +65,7 @@ globexpay/
 
 ## 🔒 Environment Variables
 
-Create a `.env` file with the following variables:
+Create a `.env` file in the `globexpay` directory with the following variables:
 
 ```env
 # App
@@ -82,13 +84,14 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 ## 📦 Database Setup
 
-The project uses Supabase as the database. Migrations are located in the `supabase/migrations` directory.
+The project uses Supabase as the database. Migrations are located in the `globexpay/supabase/migrations` directory.
 
 To run migrations:
 
 1. Install Supabase CLI
-2. Run `supabase init`
-3. Run `supabase db reset`
+2. Navigate to the `globexpay` directory
+3. Run `supabase init`
+4. Run `supabase db reset`
 
 ## 🤝 Contributing
 
@@ -111,4 +114,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by Your Team
+Made with ❤️ by Urmat Digital

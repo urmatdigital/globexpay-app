@@ -1,11 +1,15 @@
 {
-  "name": "globexpay",
-  "version": "1.0.0",
-  "description": "GlobExPay Payment System",
-  "main": "start.js",
+  "name": "globexpay-app",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "globexpay"
+  ],
   "scripts": {
-    "start": "node start.js",
-    "dev": "nodemon start.js"
+    "dev": "cd globexpay && npm run dev",
+    "build": "cd globexpay && npm run build",
+    "start": "cd globexpay && npm run start",
+    "lint": "cd globexpay && npm run lint"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
