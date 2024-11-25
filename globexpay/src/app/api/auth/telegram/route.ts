@@ -1,70 +1,97 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { processTelegramAuth } from '@/lib/telegram/auth'
-import { db } from '@/lib/supabase/config'
+import { createHash, createHmac } from 'crypto'
+import { supabase } from '@/lib/supabase/config'
+
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!
+
+function checkTelegramAuthorization(data: any) {
+  const { hash, ...userData } = data
+  const dataCheckString = Object.keys(userData)
+    .sort()
+    .map(key => `${key}=${userData[key]}`)
+    .join('\n')
+  
+  const secretKey = createHash('sha256')
+    .update(TELEGRAM_BOT_TOKEN)
+    .digest()
+  
+  const hmac = createHmac('sha256', secretKey)
+    .update(dataCheckString)
+    .digest('hex')
+  
+  return hmac === hash
+}
 
 export async function POST(request: Request) {
   try {
-    const telegramData = await request.json()
-    const userData = await processTelegramAuth(telegramData)
+    const data = await request.json()
     
-    // Инициализация Supabase клиента
-    const supabase = createRouteHandlerClient({ cookies })
-    
-    // Проверяем существует ли пользователь
-    let user = await db.users.getByTelegramId(userData.telegram_id)
-    
-    if (!user) {
-      // Создаем нового пользователя в Supabase Auth
-      const { data: authUser, error: authError } = await supabase.auth.signUp({
-        email: `${userData.telegram_id}@telegram.user`,
-        password: crypto.randomUUID(), // Генерируем случайный пароль
-        options: {
-          data: {
-            telegram_id: userData.telegram_id,
-            provider: 'telegram'
-          }
-        }
-      })
+    // Проверяем данные от Telegram
+    if (!checkTelegramAuthorization(data)) {
+      return NextResponse.json(
+        { error: 'Invalid authorization' },
+        { status: 401 }
+      )
+    }
 
-      if (authError) throw authError
+    const { id: telegram_id, username, first_name, last_name } = data
 
-      // Создаем запись в таблице users
-      const { data: newUser, error: dbError } = await supabase
+    // Проверяем существование пользователя в базе
+    const { data: existingUser, error: fetchError } = await supabase
+      .from('users')
+      .select()
+      .eq('telegram_id', telegram_id)
+      .single()
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      throw fetchError
+    }
+
+    let userId = existingUser?.id
+
+    // Если пользователя нет, создаем нового
+    if (!existingUser) {
+      const { data: newUser, error: insertError } = await supabase
         .from('users')
         .insert({
-          id: authUser.user?.id,
-          telegram_id: userData.telegram_id,
-          username: userData.username,
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          avatar_url: userData.avatar_url,
-          auth_provider: 'telegram'
+          telegram_id,
+          username,
+          first_name,
+          last_name,
         })
         .select()
         .single()
 
-      if (dbError) throw dbError
-      user = newUser
+      if (insertError) throw insertError
+      userId = newUser.id
     }
 
-    // Создаем сессию
-    const { data: { session }, error: signInError } = await supabase.auth.signInWithOtp({
-      email: `${userData.telegram_id}@telegram.user`,
+    // Генерируем JWT токен
+    const token = jwt.sign(
+      { 
+        userId,
+        telegram_id,
+        username 
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '30d' }
+    )
+
+    // Устанавливаем куки
+    cookies().set('auth-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60 // 30 days
     })
 
-    if (signInError) throw signInError
-
-    return NextResponse.json({
-      user,
-      session
-    })
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Telegram auth error:', error)
+    console.error('Auth error:', error)
     return NextResponse.json(
-      { error: 'Authentication failed' },
-      { status: 401 }
+      { error: 'Internal server error' },
+      { status: 500 }
     )
   }
 }

@@ -3,14 +3,6 @@
 import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-declare global {
-  interface Window {
-    TelegramLoginWidget: {
-      dataOnauth: (user: TelegramUser) => void
-    }
-  }
-}
-
 interface TelegramUser {
   id: number
   first_name: string
@@ -19,6 +11,23 @@ interface TelegramUser {
   photo_url?: string
   auth_date: number
   hash: string
+}
+
+declare global {
+  interface Window {
+    TelegramLoginWidget: {
+      dataOnauth: (user: TelegramUser) => void
+    }
+    Telegram: {
+      Login: {
+        auth: (options: {
+          bot_id: string
+          request_access?: boolean
+          lang?: string
+        }, callback: (user: TelegramUser) => void) => void
+      }
+    }
+  }
 }
 
 export default function TelegramLoginButton() {
@@ -31,7 +40,11 @@ export default function TelegramLoginButton() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify({
+          ...user,
+          api_id: process.env.NEXT_PUBLIC_TELEGRAM_API_ID,
+          api_hash: process.env.NEXT_PUBLIC_TELEGRAM_API_HASH,
+        }),
       })
 
       if (!response.ok) {
@@ -40,30 +53,27 @@ export default function TelegramLoginButton() {
 
       const data = await response.json()
       
-      if (data.session) {
-        router.refresh() // Обновляем серверные компоненты
+      if (data.success) {
         router.push('/dashboard')
-      } else {
-        console.error('Сессия не создана')
       }
     } catch (error) {
-      console.error('Ошибка при отправке данных:', error)
-      alert('Ошибка при авторизации. Пожалуйста, попробуйте еще раз.')
+      console.error('Ошибка авторизации:', error)
     }
   }, [router])
 
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://telegram.org/js/telegram-widget.js?22'
-    script.setAttribute('data-telegram-login', process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || '')
+    script.async = true
+    script.setAttribute('data-telegram-login', process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || '')
     script.setAttribute('data-size', 'large')
     script.setAttribute('data-radius', '8')
     script.setAttribute('data-request-access', 'write')
     script.setAttribute('data-userpic', 'false')
     script.setAttribute('data-lang', 'ru')
-    script.async = true
+    script.setAttribute('data-auth-url', `${window.location.origin}/api/auth/telegram/callback`)
 
-    const container = document.getElementById('telegram-login-container')
+    const container = document.getElementById('telegram-login-bot')
     if (container) {
       container.innerHTML = ''
       container.appendChild(script)
@@ -81,9 +91,11 @@ export default function TelegramLoginButton() {
   }, [handleTelegramResponse])
 
   return (
-    <div 
-      id="telegram-login-container"
-      className="flex justify-center items-center min-h-[50px]"
-    />
+    <div className="flex justify-center">
+      <div 
+        id="telegram-login-bot"
+        className="telegram-login"
+      />
+    </div>
   )
 }

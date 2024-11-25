@@ -1,8 +1,8 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, 'globexpay', '.env') });
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
 
 // Импортируем основной маршрутизатор
 const routes = require('./src/routes');
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Главная страница
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/register.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Маршрут для Telegram авторизации

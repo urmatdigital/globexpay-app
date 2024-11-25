@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { pool } = require('../../config/database');
+const { supabase } = require('../../../config/supabase');
 
 const controllers = {
     // Регистрация пользователя по email
@@ -9,12 +9,17 @@ const controllers = {
 
         try {
             // Проверяем, существует ли пользователь с таким email
-            const existingUser = await pool.query(
-                'SELECT id FROM users WHERE email = $1',
-                [email]
-            );
+            const { data, error } = await supabase
+                .from('users')
+                .select('id')
+                .eq('email', email);
 
-            if (existingUser.rows.length > 0) {
+            if (error) {
+                console.error('Ошибка при регистрации:', error);
+                return res.status(500).json({ error: 'Ошибка при регистрации пользователя' });
+            }
+
+            if (data.length > 0) {
                 return res.status(400).json({
                     error: 'Пользователь с таким email уже существует'
                 });
@@ -24,14 +29,25 @@ const controllers = {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Создаем пользователя
-            const result = await pool.query(
-                `INSERT INTO users (email, password, first_name, last_name, role, created_at)
-                 VALUES ($1, $2, $3, $4, $5, NOW())
-                 RETURNING id, email, role, first_name, last_name`,
-                [email, hashedPassword, firstName, lastName, role]
-            );
+            const { data: userData, error: createUserError } = await supabase
+                .from('users')
+                .insert([
+                    {
+                        email,
+                        password: hashedPassword,
+                        first_name: firstName,
+                        last_name: lastName,
+                        role,
+                    },
+                ])
+                .select('id, email, role, first_name, last_name');
 
-            const user = result.rows[0];
+            if (createUserError) {
+                console.error('Ошибка при регистрации:', createUserError);
+                return res.status(500).json({ error: 'Ошибка при регистрации пользователя' });
+            }
+
+            const user = userData[0];
 
             // Создаем JWT токен
             const token = jwt.sign(
@@ -63,18 +79,23 @@ const controllers = {
 
         try {
             // Ищем пользователя
-            const result = await pool.query(
-                'SELECT id, password, role, first_name, last_name FROM users WHERE email = $1',
-                [email]
-            );
+            const { data, error } = await supabase
+                .from('users')
+                .select('id, password, role, first_name, last_name')
+                .eq('email', email);
 
-            if (result.rows.length === 0) {
+            if (error) {
+                console.error('Ошибка при входе:', error);
+                return res.status(500).json({ error: 'Ошибка при входе в систему' });
+            }
+
+            if (data.length === 0) {
                 return res.status(401).json({
                     error: 'Неверный email или пароль'
                 });
             }
 
-            const user = result.rows[0];
+            const user = data[0];
 
             // Проверяем пароль
             const validPassword = await bcrypt.compare(password, user.password);
@@ -126,12 +147,17 @@ const controllers = {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             // Получаем данные пользователя
-            const result = await pool.query(
-                'SELECT id, email, role, first_name, last_name FROM users WHERE id = $1',
-                [decoded.userId]
-            );
+            const { data, error } = await supabase
+                .from('users')
+                .select('id, email, role, first_name, last_name')
+                .eq('id', decoded.userId);
 
-            const user = result.rows[0];
+            if (error) {
+                console.error('Ошибка при получении данных пользователя:', error);
+                return res.status(401).json({ error: 'Не авторизован' });
+            }
+
+            const user = data[0];
 
             res.json({
                 user: {

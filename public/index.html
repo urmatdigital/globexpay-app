@@ -3,36 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobExPay</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>GlobExPay - Современные финансовые решения</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-md w-96">
-            <h1 class="text-2xl font-bold text-center mb-6">GlobExPay</h1>
-            <div class="space-y-4">
-                <p class="text-gray-600 text-center">
-                    Для начала работы авторизуйтесь через Telegram
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L2 9L16 16L30 9L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 23L16 30L30 23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 16L16 23L30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                GlobExPay
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Возможности</a>
+                <a href="#about" class="nav-link">О нас</a>
+                <a href="#contact" class="nav-link">Контакты</a>
+                <a href="/auth/login" class="button button-primary">
+                    <i data-feather="log-in"></i>
+                    Войти
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 class="animate-fade-in">Финансовые решения будущего 🚀</h1>
+                <p class="animate-fade-in">
+                    GlobExPay - ваш надежный партнер в мире современных финансовых технологий.
+                    Безопасные платежи, мгновенные переводы и умная аналитика.
                 </p>
-                <div class="flex justify-center">
-                    <a href="https://t.me/GlobexPaybot" 
-                       class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                        Войти через Telegram
+                <div class="animate-fade-in">
+                    <a href="/auth/register" class="button button-primary">
+                        <i data-feather="user-plus"></i>
+                        Начать бесплатно
+                    </a>
+                    <a href="#features" class="button button-ghost">
+                        <i data-feather="info"></i>
+                        Узнать больше
                     </a>
                 </div>
             </div>
+        </section>
+
+        <section id="features" class="features-grid container">
+            <div class="card feature-card animate-fade-in">
+                <div class="feature-icon">
+                    <i data-feather="shield"></i>
+                </div>
+                <h3>Безопасность 🔒</h3>
+                <p>Современные технологии шифрования и многофакторная аутентификация для защиты ваших данных</p>
+            </div>
+            <div class="card feature-card animate-fade-in">
+                <div class="feature-icon">
+                    <i data-feather="zap"></i>
+                </div>
+                <h3>Скорость ⚡</h3>
+                <p>Мгновенные транзакции и быстрые переводы в любую точку мира</p>
+            </div>
+            <div class="card feature-card animate-fade-in">
+                <div class="feature-icon">
+                    <i data-feather="trending-up"></i>
+                </div>
+                <h3>Аналитика 📊</h3>
+                <p>Подробная статистика и отчеты для контроля ваших финансов</p>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="container stats-grid">
+                <div class="stat-item">
+                    <h3>100K+</h3>
+                    <p>Активных пользователей</p>
+                </div>
+                <div class="stat-item">
+                    <h3>$50M+</h3>
+                    <p>Обработано платежей</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p>Время работы системы</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="container">
+            <div class="card">
+                <h2>О компании GlobExPay 🌍</h2>
+                <p>
+                    Мы - команда профессионалов, создающая инновационные финансовые решения.
+                    Наша миссия - сделать финансовые операции простыми, быстрыми и безопасными
+                    для каждого.
+                </p>
+            </div>
+        </section>
+
+        <section id="contact" class="container">
+            <div class="card">
+                <h2>Свяжитесь с нами 📱</h2>
+                <p>
+                    Наша служба поддержки доступна 24/7. Мы всегда готовы помочь вам
+                    с любыми вопросами.
+                </p>
+                <div class="contact-buttons">
+                    <a href="https://t.me/GlobexPaybot" class="button button-primary">
+                        <i data-feather="send"></i>
+                        Telegram
+                    </a>
+                    <a href="mailto:support@globexpay.com" class="button button-ghost">
+                        <i data-feather="mail"></i>
+                        Email
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-column">
+                <h4>GlobExPay</h4>
+                <ul class="footer-links">
+                    <li><a href="#features" class="footer-link">Возможности</a></li>
+                    <li><a href="#about" class="footer-link">О нас</a></li>
+                    <li><a href="#contact" class="footer-link">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Правовая информация</h4>
+                <ul class="footer-links">
+                    <li><a href="/terms" class="footer-link">Условия использования</a></li>
+                    <li><a href="/privacy" class="footer-link">Политика конфиденциальности</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Социальные сети</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">
+                        <i data-feather="twitter"></i> Twitter
+                    </a></li>
+                    <li><a href="#" class="footer-link">
+                        <i data-feather="linkedin"></i> LinkedIn
+                    </a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // Проверка авторизации при загрузке страницы
-        fetch('/api/telegram/check-auth')
-            .then(response => response.json())
-            .then(data => {
-                if (data.authorized) {
-                    window.location.href = '/dashboard';
+        feather.replace();
+        
+        // Анимация при скролле
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
                 }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .feature-card, .stat-item').forEach(el => {
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>

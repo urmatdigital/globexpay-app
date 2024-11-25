@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { sendTelegramMessage, formatLogoutMessage } from '@/lib/telegram/notifications'
+import { sendLogoutNotification } from '@/lib/telegram/notifications'
 
 export async function POST() {
   try {
@@ -22,10 +22,7 @@ export async function POST() {
 
       if (userData?.telegram_id) {
         // Отправляем уведомление в Telegram
-        await sendTelegramMessage({
-          chat_id: userData.telegram_id,
-          text: formatLogoutMessage(userData.username),
-        })
+        await sendLogoutNotification(userData.telegram_id)
       }
     }
 

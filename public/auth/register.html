@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - GlobExPay</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L2 9L16 16L30 9L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 23L16 30L30 23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 16L16 23L30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                GlobExPay
+            </a>
+            <div class="nav-links">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <i data-feather="moon"></i>
+                </button>
+            </div>
+            <button class="mobile-menu" aria-label="Меню">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="auth-container">
+        <div class="card">
+            <h1 class="text-center">Создать аккаунт</h1>
+            <p class="text-center mb-6">Выберите удобный способ регистрации</p>
+
+            <div class="auth-options">
+                <a href="https://t.me/GlobexPaybot" class="button button-primary w-full mb-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="mr-2">
+                        <path d="M22.2647 2.42C21.98 2.19609 21.6364 2.07146 21.2789 2.06115C20.9214 2.05084 20.5704 2.15539 20.2734 2.36C20.2734 2.36 3.96472 12.04 2.76472 12.94C2.59472 13.07 1.45472 13.81 1.51472 15.05C1.56472 16.29 2.54472 16.95 2.68472 17.07C3.85472 17.93 6.07472 18.9 6.86472 19.22C7.06472 19.3 7.81472 19.6 8.29472 19.61C8.72472 19.62 9.13472 19.5 9.45472 19.26C9.45472 19.26 14.7847 15.32 17.4547 13.29C17.8447 12.98 18.0447 13.05 17.9547 13.29C17.7647 13.83 13.5347 17.76 13.5347 17.76L13.5247 17.77C13.2947 17.98 13.1547 18.29 13.1547 18.61C13.1547 18.91 13.2847 19.19 13.5047 19.39C14.2247 20.04 17.2647 22.14 17.9547 22.58C18.0747 22.65 18.2047 22.72 18.3447 22.78C18.9947 23.09 19.7647 23.15 20.3647 22.95C21.0347 22.73 21.5547 22.21 21.7647 21.49C21.9047 21 23.3447 6.32 23.4947 3.78C23.5047 3.58 23.4847 3.39 23.4547 3.19C23.4169 2.90264 23.3127 2.62977 23.1547 2.39C22.8847 2.36 22.5447 2.36 22.2647 2.42Z" fill="currentColor"/>
+                    </svg>
+                    Регистрация через Telegram
+                </a>
+
+                <div class="divider">
+                    <span>или</span>
+                </div>
+
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" id="name" name="name" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input type="password" id="password" name="password" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Подтвердите пароль</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
+                    </div>
+
+                    <button type="submit" class="button button-primary w-full">
+                        <i data-feather="user-plus"></i>
+                        Зарегистрироваться
+                    </button>
+                </form>
+
+                <p class="text-center mt-4">
+                    Уже есть аккаунт?
+                    <a href="/auth/login" class="text-primary">Войти</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        feather.replace();
+
+        // Переключатель темы
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        function updateThemeIcon(theme) {
+            themeIcon.setAttribute('data-feather', theme === 'dark' ? 'sun' : 'moon');
+            feather.replace();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // Установка начальной темы
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        // Мобильное меню
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenu.querySelector('i');
+            icon.setAttribute('data-feather', navLinks.classList.contains('active') ? 'x' : 'menu');
+            feather.replace();
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    window.location.href = '/dashboard';
+                } else {
+                    throw new Error(data.error || 'Ошибка регистрации');
+                }
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        });
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i data-feather="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            feather.replace();
+
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    </script>
+
+    <style>
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: var(--card-foreground);
+            font-size: 0.875rem;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            max-width: 24rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+
+        .notification.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #4ade80;
+        }
+    </style>
+</body>
+</html>
