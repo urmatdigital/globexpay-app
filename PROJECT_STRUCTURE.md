@@ -1,4 +1,11 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/acd40826-f3d3-47a3-9d69-01a5bd681a15/deploy-status)](https://app.netlify.com/sites/globexpay/deploys)
+
 # GlobExPay - Платежная Система
+
+## Развертывание
+- **Продакшн сайт**: [globexpay.ru](http://globexpay.ru)
+- **Статус**: Сайт успешно развернут и работает на Netlify
+- **Домен**: Настроен на http://globexpay.ru
 
 ## Обзор проекта
 GlobExPay - это современная платежная система, построенная на Node.js и Express с интеграцией Telegram для аутентификации и уведомлений.
