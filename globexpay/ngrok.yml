@@ -1,0 +1,7 @@
+version: "2"
+authtoken: "2pLY5wwbJtbMewUieULrsDn3Nds_7vAfcdGk7bECPehDWosFd"
+tunnels:
+  web:
+    addr: 3000
+    proto: http
+    domain: prompt-urchin-friendly.ngrok-free.app

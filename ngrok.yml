@@ -1,0 +1,7 @@
+version: "2"
+authtoken: "2YKIFHbYMBkBhVLKhwuNFUfBwIl_4QjQqUVvUXtNZWJzpkDzh"
+tunnels:
+  globexpay:
+    proto: http
+    addr: 3000
+    domain: globexpay.ngrok.dev
